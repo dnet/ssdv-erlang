@@ -9,8 +9,7 @@ decode_packet(Packet = <<?SYNC_BYTE, ?PACKET_TYPE_NORMAL, CallSign:32, ImageId,
                 PacketId:16, Width, Height, _ReservedFlags:6, SubSampling:2,
                 McuOffset, McuIndex:16, Payload:205/binary, CRC:32,
                 _FEC:32/binary>>) when Width =/= 0 andalso Height =/= 0 ->
-    <<_, CrcSubject:219/binary, _:36/binary>> = Packet,
-    case erlang:crc32(CrcSubject) of
+    case erlang:crc32(binary:part(Packet, 1, 219)) of
         CRC -> #packet{call_sign=base40:decode(CallSign), image_id=ImageId,
                        packet_id=PacketId, size={Width, Height},
                        subsampling=SubSampling, mcu=mcu(McuOffset, McuIndex),
