@@ -7,7 +7,7 @@
 -define(PRIM, 11).
 
 decode(Data) ->
-    ErrorFree = list_to_tuple([0 || _ <- lists:seq(1, ?NROOTS)]),
+    ErrorFree = erlang:make_tuple(?NROOTS, 0),
     case form_syndromes(Data) of
         ErrorFree -> {ok, 0, Data};
         Syndromes ->
